@@ -83,7 +83,7 @@ export function TripPlanner({ onTripCreated }: TripPlannerProps) {
           itinerary,
         },
         user.uid,
-      )
+      ) 
 
       setGenerationStatus("✅ Trip created successfully!")
       setTimeout(() => {
@@ -164,6 +164,8 @@ export function TripPlanner({ onTripCreated }: TripPlannerProps) {
               </div>
             </div>
 
+
+
             {(startLocation || endLocation) && (
               <div className="h-64 w-full rounded-md overflow-hidden border border-border">
                 <Suspense fallback={<MapLoading />}>
@@ -173,6 +175,8 @@ export function TripPlanner({ onTripCreated }: TripPlannerProps) {
             )}
           </div>
         )}
+
+
 
         {step === 2 && (
           <div className="space-y-6">

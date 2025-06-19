@@ -17,6 +17,7 @@ export function LandingPage() {
   const [error, setError] = useState("")
 
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
+    
     e.preventDefault()
     setIsLoading(true)
     setError("")
@@ -34,6 +35,7 @@ export function LandingPage() {
     } finally {
       setIsLoading(false)
     }
+
   }
 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {

@@ -200,6 +200,29 @@ class DbService {
 
     return { id: tripDoc.id, ...tripData } as Trip
   }
+
+
+  public async deleteTrip(tripId: string) {
+  await this.initializeFirebase();
+
+  const user = authService.getCurrentUser();
+  if (!user) throw new Error("User not authenticated");
+
+  const { doc, getDoc, deleteDoc } = await import("firebase/firestore");
+
+  const tripRef = doc(this.db, "trips", tripId);
+  const tripSnap = await getDoc(tripRef);
+
+  if (!tripSnap.exists()) throw new Error("Trip not found");
+
+  const tripData = tripSnap.data() as Omit<Trip, "id">;
+
+  if (tripData.userId !== user.uid) throw new Error("Unauthorized access to trip");
+
+  await deleteDoc(tripRef);
+}
+
+
 }
 
 // Export the database service instance

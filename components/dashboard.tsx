@@ -20,7 +20,8 @@ export function Dashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [indexCreated, setIndexCreated] = useState(false)
-
+console.log(trips)
+  
   useEffect(() => {
     loadTrips()
   }, [])
@@ -104,7 +105,7 @@ export function Dashboard() {
           </div>
         </div>
       </header>
-
+                
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {error && !indexCreated && (
           <Alert className="mb-4" variant="destructive">

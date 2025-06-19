@@ -1,12 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import type { Trip } from "@/lib/db-service"
 import { Loader2, MapPin, Calendar, RefreshCw } from "lucide-react"
 import { TripDetails } from "@/components/trip-details"
-
+import { dbService } from "@/lib/db-service"
 interface TripHistoryProps {
   trips: Trip[]
   loading: boolean
@@ -15,7 +15,19 @@ interface TripHistoryProps {
 
 export function TripHistory({ trips, loading, onRefresh }: TripHistoryProps) {
   const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null)
+  const [tripList, setTripList] = useState<any> ([])
 
+  useEffect(()=>{
+        setTripList(trips)
+  },[])
+
+  const handleDeleteTrip = (e:any,id:any) =>{
+    e.stopPropagation()
+    console.log(id)
+    setTripList((prev:any)=>prev.filter((item:any)=>item.id!==id))
+    dbService.deleteTrip(id)
+  }
+  console.log(trips)
   // Helper function to safely format dates
   const formatDate = (date: any) => {
     if (!date) return "N/A"
@@ -38,6 +50,9 @@ export function TripHistory({ trips, loading, onRefresh }: TripHistoryProps) {
       return "Invalid date"
     }
   }
+
+
+    
 
   if (loading) {
     return (
@@ -86,7 +101,7 @@ export function TripHistory({ trips, loading, onRefresh }: TripHistoryProps) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {trips.map((trip) => (
+        {tripList.map((trip:any) => (
           <Card
             key={trip.id}
             className="cursor-pointer hover:shadow-md transition-shadow border-border"
@@ -123,6 +138,10 @@ export function TripHistory({ trips, loading, onRefresh }: TripHistoryProps) {
                 <span className="text-xs font-medium">{trip.days} days</span>
               </div>
             </CardFooter>
+            <div className="btnContainer p-10 flex w-full justify-end">
+                  <Button  onClick={(e) => handleDeleteTrip(e,trip.id)}>Delete</Button>
+            </div>
+         
           </Card>
         ))}
       </div>

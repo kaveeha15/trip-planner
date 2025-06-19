@@ -1,6 +1,57 @@
 import type { DayPlan, Activity, Location, TripType } from "./firebase-db"
 
 // AI-powered trip generator using Gemini
+
+export async function generateSuggestedLocations ( startLocation: Location,
+  endLocation: Location,days: number, tripType: TripType ){
+//     const { generateText } = await import("ai")
+//     const { google } = await import("@ai-sdk/google")
+    const apiKey = "AIzaSyBEmPWCACW9BcYJjYRIapbbk5eFCjUti3M"
+//     const gemini = google("gemini-1.5-flash")
+      
+   // const prompt = `You are a professional travel planner. Create a list of suggested locations based on the
+   // ${startLocation} as the trip start location and the ${endLocation} as the trip end location for a  ${days} days ${tripType} type trip. this is for a vacation trip. give this as an an array. 
+
+//`   
+//
+//      const { text } = await generateText({
+//       model: gemini,
+//       prompt: prompt,
+//       maxTokens: 4000,
+      
+//     })
+
+//     console.log("Ai responce is",text)
+
+const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [
+                  {
+                    text:`Create a list of suggested locations based on the
+                    ${startLocation.address} as the trip start location and the ${endLocation.address} as the trip end location for a  ${days} days ${tripType} type trip. give me at least 10 places, do not include words in your responce, just the names of the suggested places names only`   ,
+                  },
+                ],
+              },
+            ],
+          
+          }),
+        },
+      )
+      const data = await response.json()
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text || ""
+     const locations = text.trim().split('\n')
+          console.log(locations)
+      return locations
+}
+
 export async function generateAIItinerary(
   startLocation: Location,
   endLocation: Location,
